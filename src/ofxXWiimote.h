@@ -26,7 +26,8 @@ public:
     void queryDeviceType();
     void queryExtension();
     void rumble(bool on);
-    void getAccel(ofVec3f& accel);
+    void getAccel(ofVec3f& _accel);
+    void getLightbarPosition(ofVec3f& _position);
     void getPointing(ofVec2f& _pointing);
     void getNormalisedAccel(ofVec3f& _accel);
     bool reconnectDevice(int device_id);
@@ -37,11 +38,13 @@ protected:
 
     void handle_watch();
     void handle_keys(const struct xwii_event *event);
+    void handleIR(const struct xwii_event *event);
 
     struct xwii_iface *iface;
     struct xwii_event event;
     ofVec3f accel;
     ofVec2f pointing;
+    ofVec3f lightBarPosition;
 
 private:
     int fds_num;

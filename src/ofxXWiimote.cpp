@@ -204,6 +204,13 @@ void ofxXWiimote::getPointing(ofVec2f& _pointing)
   unlock();
 }
 
+void ofxXWiimote::getLightbarPosition(ofVec3f& _position)
+{
+  lock();
+  _position = lightBarPosition;
+  unlock();
+}
+
 //--------------------------------------------------------------
 void ofxXWiimote::handle_keys(const struct xwii_event *event)
 {
@@ -337,8 +344,12 @@ void ofxXWiimote::threadedFunction()
                 accel.set(event.v.abs[0].x,event.v.abs[0].y,event.v.abs[0].z);
                 break;
             case XWII_EVENT_IR:
-                ofLogVerbose() << "IR event received << endl";
-                pointing.set(event.v.abs[0].x, event.v.abs[0].y);
+                ofLogVerbose() << "======== IR event received" << endl;
+
+                handleIR(&event);
+
+
+                //pointing.set(event.v.abs[0].x, event.v.abs[0].y);
                 break;
             case XWII_EVENT_MOTION_PLUS:
                 //cout << "motion plus event" << endl;
@@ -371,6 +382,36 @@ void ofxXWiimote::threadedFunction()
 
     } // thread running
 
+}
+
+void ofxXWiimote::handleIR(const struct xwii_event *event)
+{
+  static int NUM_IR_SOURCES = 2; // max is 4
+
+  int countValidSources = 0;
+  for (int i = 0; i < NUM_IR_SOURCES; i++) {
+    if (xwii_event_ir_is_valid(&event->v.abs[i])) {
+      countValidSources++;
+      ofLogVerbose() << "valid IR source #" << i << ": " << event->v.abs[i].x << "," << event->v.abs[i].y << endl;
+    }
+  }
+  if (countValidSources == 2) {
+    static float WIDTH = 200; // 200cm known distance between light sources
+    static float FOCAL_LENGTH = 281 * 100 / WIDTH; // 281px @ 100cm from light bar
+    ofVec2f p1 (event->v.abs[0].x, event->v.abs[0].y);
+    ofVec2f p2 (event->v.abs[1].x, event->v.abs[1].y);
+    float apparentWidth = p1.distance(p2);
+    float actualDistance = WIDTH * FOCAL_LENGTH / apparentWidth;
+
+    static float CAM_WIDTH = 1024;
+    static float CAM_HEIGHT = 1024;
+    ofVec2f camCentre (CAM_WIDTH/2, CAM_HEIGHT/2);
+    ofVec2f lightBarMidpoint = p1.getMiddle(p2);
+
+    ofLogNotice() << "apparentWidth: " << apparentWidth;
+    ofLogNotice() << "actualDistance: " << actualDistance;
+    ofLogNotice() << "lightBarMidpoint: " << lightBarMidpoint;
+  }
 }
 
 //--------------------------------------------------------------
