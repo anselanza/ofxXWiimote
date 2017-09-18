@@ -330,7 +330,7 @@ void ofxXWiimote::threadedFunction()
                 accel.set(event.v.abs[0].x,event.v.abs[0].y,event.v.abs[0].z);
                 break;
             case XWII_EVENT_IR:
-
+                ofLogNotice() << "Got IR event: " << event.v.abs[0].x << endl;
                 break;
             case XWII_EVENT_MOTION_PLUS:
                 //cout << "motion plus event" << endl;
