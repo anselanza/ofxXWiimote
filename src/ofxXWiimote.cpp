@@ -197,17 +197,15 @@ void ofxXWiimote::getAccel(ofVec3f& _accel)
     unlock();
 }
 
-void ofxXWiimote::getPointing(ofVec2f& _pointing)
+float ofxXWiimote::getPointerDistance()
 {
-  lock();
-  _pointing = pointing;
-  unlock();
+  return lightBarPosition.z;
 }
 
-void ofxXWiimote::getLightbarPosition(ofVec3f& _position)
+void ofxXWiimote::getCursorUncorrected(ofVec2f& _position)
 {
   lock();
-  _position = lightBarPosition;
+  _position = cursorUncorrected;
   unlock();
 }
 
@@ -408,9 +406,13 @@ void ofxXWiimote::handleIR(const struct xwii_event *event)
     ofVec2f camCentre (CAM_WIDTH/2, CAM_HEIGHT/2);
     ofVec2f lightBarMidpoint = p1.getMiddle(p2);
 
-    ofLogNotice() << "apparentWidth: " << apparentWidth;
-    ofLogNotice() << "actualDistance: " << actualDistance;
-    ofLogNotice() << "lightBarMidpoint: " << lightBarMidpoint;
+    ofLogVerbose() << "apparentWidth: " << apparentWidth;
+    ofLogVerbose() << "actualDistance: " << actualDistance;
+    ofLogVerbose() << "lightBarMidpoint: " << lightBarMidpoint;
+
+    lightBarPosition.set(lightBarMidpoint.x, lightBarMidpoint.y, actualDistance);
+    cursorUncorrected.set(CAM_WIDTH - lightBarMidpoint.x, lightBarMidpoint.y);
+
   }
 }
 
