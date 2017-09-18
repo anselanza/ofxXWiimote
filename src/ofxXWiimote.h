@@ -27,6 +27,7 @@ public:
     void queryExtension();
     void rumble(bool on);
     void getAccel(ofVec3f& accel);
+    void getPointing(ofVec2f& _pointing);
     void getNormalisedAccel(ofVec3f& _accel);
     bool reconnectDevice(int device_id);
 
@@ -40,6 +41,7 @@ protected:
     struct xwii_iface *iface;
     struct xwii_event event;
     ofVec3f accel;
+    ofVec2f pointing;
 
 private:
     int fds_num;

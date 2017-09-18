@@ -197,6 +197,13 @@ void ofxXWiimote::getAccel(ofVec3f& _accel)
     unlock();
 }
 
+void ofxXWiimote::getPointing(ofVec2f& _pointing)
+{
+  lock();
+  _pointing = pointing;
+  unlock();
+}
+
 //--------------------------------------------------------------
 void ofxXWiimote::handle_keys(const struct xwii_event *event)
 {
@@ -330,7 +337,8 @@ void ofxXWiimote::threadedFunction()
                 accel.set(event.v.abs[0].x,event.v.abs[0].y,event.v.abs[0].z);
                 break;
             case XWII_EVENT_IR:
-                ofLogNotice() << "Got IR event: " << event.v.abs[0].x << endl;
+                ofLogVerbose() << "IR event received << endl";
+                pointing.set(event.v.abs[0].x, event.v.abs[0].y);
                 break;
             case XWII_EVENT_MOTION_PLUS:
                 //cout << "motion plus event" << endl;
