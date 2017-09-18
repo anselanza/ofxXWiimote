@@ -39,7 +39,7 @@ int ofxXWiimote::listDevices()
 
     while ((ent = xwii_monitor_poll(mon)))
     {
-        ofLog(OF_LOG_NOTICE,"** Found device #%d: %s", ++num, ent);
+        ofLog(OF_LOG_NOTICE,"** Found Wiimote device #%d: %s", ++num, ent);
         free(ent);
     }
 
