@@ -218,6 +218,8 @@ void ofxXWiimote::handle_keys(const struct xwii_event *event)
     WiimoteKeyEvent e;
     e.key = code;
     e.pressed = pressed;
+
+    ofLogNotice("Key event!", ofToString(code));
     ofNotifyEvent(ofxXWiimote::wiimoteKeyEvent, e, this);
 
 //	if (code == XWII_KEY_LEFT) {
