@@ -11,11 +11,11 @@ public:
 
     struct WiimoteKeyEvent
     {
-        unsigned int key;
+        unsigned int code;
         bool pressed;
     };
 
-    static ofEvent<WiimoteKeyEvent> wiimoteKeyEvent;
+    static ofEvent<WiimoteKeyEvent> wiimoteKeyPress;
 
     ofxXWiimote();
     virtual ~ofxXWiimote();

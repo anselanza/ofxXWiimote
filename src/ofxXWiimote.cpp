@@ -2,7 +2,7 @@
 
 #include "ofMain.h"
 
-ofEvent<ofxXWiimote::WiimoteKeyEvent> ofxXWiimote::wiimoteKeyEvent = ofEvent<ofxXWiimote::WiimoteKeyEvent>();
+ofEvent<ofxXWiimote::WiimoteKeyEvent> ofxXWiimote::wiimoteKeyPress = ofEvent<WiimoteKeyEvent>();
 
 ofxXWiimote::ofxXWiimote()
 {
@@ -228,11 +228,11 @@ void ofxXWiimote::handle_keys(const struct xwii_event *event)
     bool pressed = event->v.key.state;
 
     WiimoteKeyEvent e;
-    e.key = code;
+    e.code = code;
     e.pressed = pressed;
 
     ofLogVerbose("Key event!", ofToString(code));
-    ofNotifyEvent(ofxXWiimote::wiimoteKeyEvent, e, this);
+    ofNotifyEvent(wiimoteKeyPress, e, this);
 
 //	if (code == XWII_KEY_LEFT) {
 //		mvprintw(4, 7, "%s", str);
