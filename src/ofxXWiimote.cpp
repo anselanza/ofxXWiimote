@@ -204,7 +204,7 @@ float ofxXWiimote::getPointerDistance()
   return lightBarPosition.z;
 }
 
-void ofxXWiimote::getCursorUncorrected(ofVec2f& _position, bool& _isKnown)
+void ofxXWiimote::getPointingUncorrected(ofVec2f& _position, bool& _isKnown)
 {
   lock();
   _position = cursorUncorrected;
@@ -212,6 +212,15 @@ void ofxXWiimote::getCursorUncorrected(ofVec2f& _position, bool& _isKnown)
   unlock();
 }
 
+void ofxXWiimote::getRemotePositionEstimation(ofVec3f& _position) {
+  lock();
+  _position = remotePosition;
+  unlock();
+}
+
+void ofxXWiimote::refreshMotionPlus() {
+  mp_do_refresh = true;
+}
 //--------------------------------------------------------------
 void ofxXWiimote::handle_keys(const struct xwii_event *event)
 {
