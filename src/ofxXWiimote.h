@@ -27,7 +27,7 @@ public:
     void queryExtension();
     void rumble(bool on);
     void getAccel(ofVec3f& _accel);
-    void getCursorUncorrected(ofVec2f& _position);
+    void getCursorUncorrected(ofVec2f& _position, bool& _isKnown);
     float getPointerDistance();
     void getNormalisedAccel(ofVec3f& _accel);
     bool reconnectDevice(int device_id);
@@ -44,6 +44,7 @@ protected:
     struct xwii_event event;
     ofVec3f accel;
     ofVec2f pointing;
+    bool pointingIsKnown;
     ofVec2f cursorUncorrected;
     ofVec3f lightBarPosition;
 
