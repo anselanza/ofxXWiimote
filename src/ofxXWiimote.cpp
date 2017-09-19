@@ -9,6 +9,7 @@ ofxXWiimote::ofxXWiimote()
     active = false;
     iface = NULL;
     pointingIsKnown = false;
+    mp_do_refresh = true;
 }
 
 ofxXWiimote::~ofxXWiimote()
@@ -347,14 +348,11 @@ void ofxXWiimote::threadedFunction()
                 break;
             case XWII_EVENT_IR:
                 ofLogVerbose() << "======== IR event received" << endl;
-
                 handleIR(&event);
-
-
-                //pointing.set(event.v.abs[0].x, event.v.abs[0].y);
                 break;
             case XWII_EVENT_MOTION_PLUS:
-                //cout << "motion plus event" << endl;
+                ofLogVerbose() << "motion plus event!";
+                updateMovement(&event);
                 break;
             case XWII_EVENT_NUNCHUK_KEY:
             case XWII_EVENT_NUNCHUK_MOVE:
@@ -422,6 +420,46 @@ void ofxXWiimote::handleIR(const struct xwii_event *event)
   } else {
     pointingIsKnown = false;
   }
+}
+
+void ofxXWiimote::updateMovement(const struct xwii_event *event)
+{
+  static int32_t mp_x, mp_y;
+  int32_t x, y, z, factor;
+
+  if (mp_do_refresh) {
+      xwii_iface_get_mp_normalization(iface, &x, &y, &z, &factor);
+      x = event->v.abs[0].x + x;
+      y = event->v.abs[0].y + y;
+      z = event->v.abs[0].z + z;
+      xwii_iface_set_mp_normalization(iface, x, y, z, factor);
+  }
+
+  x = event->v.abs[0].x;
+  y = event->v.abs[0].y;
+  z = event->v.abs[0].z;
+
+  if (mp_do_refresh) {
+      /* try to stabilize calibration as MP tends to report huge
+       * values during initialization for 1-2s. */
+      if (x < 5000 && y < 5000 && z < 5000)
+          mp_do_refresh = false;
+  }
+
+  /* use x value unchanged for X-direction */
+  mp_x += x / 100;
+  mp_x = (mp_x < 0) ? 0 : ((mp_x > 10000) ? 10000 : mp_x);
+  /* use z value unchanged for Z-direction */
+  mp_y += z / 100;
+  mp_y = (mp_y < 0) ? 0 : ((mp_y > 10000) ? 10000 : mp_y);
+
+  x = mp_x * 22 / 10000;
+  x = (x < 0) ? 0 : ((x > 22) ? 22 : x);
+  y = mp_y * 7 / 10000;
+  y = (y < 0) ? 0 : ((y > 7) ? 7 : y);
+
+  remotePosition.set(mp_x, mp_y, z);
+  ofLogVerbose("remote position update:", ofToString(remotePosition));
 }
 
 //--------------------------------------------------------------

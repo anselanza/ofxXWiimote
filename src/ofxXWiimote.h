@@ -39,6 +39,7 @@ protected:
     void handle_watch();
     void handle_keys(const struct xwii_event *event);
     void handleIR(const struct xwii_event *event);
+    void updateMovement(const struct xwii_event *event);
 
     struct xwii_iface *iface;
     struct xwii_event event;
@@ -47,6 +48,9 @@ protected:
     bool pointingIsKnown;
     ofVec2f cursorUncorrected;
     ofVec3f lightBarPosition;
+    ofVec3f remotePosition;
+
+    bool mp_do_refresh;
 
 private:
     int fds_num;
