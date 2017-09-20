@@ -204,10 +204,10 @@ float ofxXWiimote::getPointerDistance()
   return lightBarPosition.z;
 }
 
-void ofxXWiimote::getPointingUncorrected(ofVec2f& _position, bool& _isKnown)
+void ofxXWiimote::getPointingUncorrected(ofVec3f& _position, bool& _isKnown)
 {
   lock();
-  _position = cursorUncorrected;
+  _position = lightBarPosition;
   _isKnown = pointingIsKnown;
   unlock();
 }
@@ -422,7 +422,6 @@ void ofxXWiimote::handleIR(const struct xwii_event *event)
     ofLogVerbose() << "lightBarMidpoint: " << lightBarMidpoint;
 
     lightBarPosition.set(lightBarMidpoint.x, lightBarMidpoint.y, actualDistance);
-    cursorUncorrected.set(CAM_WIDTH - lightBarMidpoint.x, lightBarMidpoint.y);
 
     pointingIsKnown = true;
 

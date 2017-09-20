@@ -27,7 +27,7 @@ public:
     void queryExtension();
     void rumble(bool on);
     void getAccel(ofVec3f& _accel);
-    void getPointingUncorrected(ofVec2f& _position, bool& _isKnown);
+    void getPointingUncorrected(ofVec3f& _position, bool& _isKnown);
     void getRemotePositionEstimation(ofVec3f& _position);
     float getPointerDistance();
     void getNormalisedAccel(ofVec3f& _accel);
@@ -49,7 +49,7 @@ protected:
     ofVec3f accel;
     ofVec2f pointing;
     bool pointingIsKnown;
-    ofVec2f cursorUncorrected;
+    ofVec3f cursorUncorrected;
     ofVec3f lightBarPosition;
     ofVec3f remotePosition;
 
